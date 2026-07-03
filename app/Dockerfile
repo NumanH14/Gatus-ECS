@@ -2,15 +2,13 @@ FROM golang:alpine AS builder
 
 WORKDIR /app
 
+RUN adduser -S appuser && addgroup -S appgroup
+
 COPY . .
-
-RUN useradd -m appuser:appgroup
-
-USER appuser
 
 RUN go mod download
 
-RUN go build -o /gatus-ecs
+RUN CGO_ENABLED=0 GOOS=linux go build -o /gatus-ecs
 
 ############################
 # STEP 2 build a small image
@@ -18,7 +16,15 @@ RUN go build -o /gatus-ecs
 
 FROM scratch
 
-COPY --from=builder /gatus-ecs .
+COPY --from=builder /gatus-ecs /gatus-ecs
+
+COPY --from=builder /app/config/config.yaml /config/config.yaml
+
+COPY --from=builder /etc/passwd /etc/passwd
+
+COPY --from=builder /etc/group /etc/group
+
+USER appuser
 
 EXPOSE 8080
 
