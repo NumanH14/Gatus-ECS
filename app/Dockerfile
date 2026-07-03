@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN
+RUN useradd -m appuser:appgroup
+
+USER appuser
 
 RUN go mod download
 
