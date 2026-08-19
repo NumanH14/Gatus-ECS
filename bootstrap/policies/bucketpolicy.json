@@ -1,0 +1,48 @@
+{
+  "Version": "2012-10-17",
+  "Id": "CombinedS3BucketPolicy",
+  "Statement": [
+    {
+      "Sid": "DenyObjectsThatAreNotSSEKMS",
+      "Principal": "*",
+      "Effect": "Deny",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::project-bucket/*",
+      "Condition": {
+        "Null": {
+          "s3:x-amz-server-side-encryption-aws-kms-key-id": "true"
+        }
+      }
+    },
+    {
+      "Sid": "DenyAccessFromOutsideOrg",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::project-bucket",
+        "arn:aws:s3:::project-bucket/*"
+      ],
+      "Condition": {
+        "StringNotEquals": {
+          "aws:PrincipalOrgID": "o-aa111bb222"
+        }
+      }
+    },
+    {
+      "Sid": "RestrictToTLSRequestsOnly",
+      "Action": "s3:*",
+      "Effect": "Deny",
+      "Resource": [
+        "arn:aws:s3:::project-bucket",
+        "arn:aws:s3:::project-bucket/*"
+      ],
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false"
+        }
+      },
+      "Principal": "*"
+    }
+  ]
+}
