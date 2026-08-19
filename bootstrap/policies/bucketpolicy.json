@@ -25,7 +25,7 @@
       ],
       "Condition": {
         "StringNotEquals": {
-          "aws:PrincipalOrgID": "o-aa111bb222"
+          "aws:PrincipalOrgID": "${orginisationid}"
         }
       }
     },
