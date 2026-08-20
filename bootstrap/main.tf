@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "project-bucket" {
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.project-bucket.id
-  policy = var.bucket-policy
+  policy = file("${path.module}/policies/bucketpolicy.json")
 }
 
 resource "aws_s3_bucket_versioning" "versioning_bucket" {
@@ -52,7 +52,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse-encryption" {
 
 resource "aws_kms_key_policy" "kms_policy" {
   key_id = aws_kms_key.mykey.id
-  policy = var.kms-policy
+  policy = file("${path.module}/policies/kmspolicy.json")
 }
 
 
