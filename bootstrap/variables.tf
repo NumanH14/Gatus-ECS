@@ -1,6 +1,6 @@
 variable "bucket" {
   type = string
-  default = "project-bucket"
+  default = "numan-statefile"
 }
 
 variable "bucket-tag" {
@@ -12,4 +12,19 @@ variable "bucket-tag" {
 variable "kms-alias" {
  type = string
  default = "alias/my-key"
+}
+
+variable "organisation_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "admin_role_arn" {
+  type      = string
+  sensitive = true
+}
+
+variable "key_user" {
+  type      = string
+  sensitive = true
 }
