@@ -1,7 +1,8 @@
 .DS_Store
 .terraform
+.terraform*
 terraform.tfstate
-terraform.tfstate.
 terraform.tfstate.*
-.terraform.lock.hcl
-
+terraform.tfvars
+terraform.tfstate.backup
+.env
