@@ -5,7 +5,7 @@ output "vpc_cidr" {
   value = var.vpc_cidr_block 
 }
 output "subnet_id" {
-  value = aws_subnet.main[*].id
+  value = aws_subnet.public[*].id
 }
 output "igw_id" {
   value = aws_internet_gateway.gw.id

@@ -23,13 +23,25 @@ resource "aws_vpc" "main" {
 
 # Creating 4 subnets
 
-resource "aws_subnet" "main" {
-  count = 4
+resource "aws_subnet" "public" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "${cidrsubnet(var.vpc_cidr_block,8,count.index)}"
+  count = length(var.public_subnet_cidrs)
+  cidr_block = var.public_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
   
   tags = {
-    Name = "subnet-${count.index + 0}" 
+    Name = "public subnet" 
+  }
+}
+
+resource "aws_subnet" "private" {
+  vpc_id     = aws_vpc.main.id
+  count = length(var.private_subnet_cidrs)
+  cidr_block = var.private_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
+  
+  tags = {
+    Name = "private subnet" 
   }
 }
 
@@ -49,8 +61,8 @@ resource "aws_route_table" "public-route" {
   vpc_id = aws_vpc.main.id 
 
   route {
-    cidr_block = "0.0.0.0.0"
     gateway_id = aws_internet_gateway.gw.id
+    cidr_block = "0.0.0.0/0"
   }
 
   tags = {
@@ -68,14 +80,14 @@ resource "aws_route_table" "private-route" {
 }
 
 # route table association - public & private assoc
-
 resource "aws_route_table_association" "public" {
-  gateway_id     = aws_internet_gateway.gw.id
-  route_table_id = aws_route_table.public-route.id 
+  count = length(var.public_subnet_cidrs)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public-route.id
 }
 
 resource "aws_route_table_association" "private" {
-  count = 2
-  subnet_id      = aws_subnet.main[count.index + 2].id
+  count = length(var.private_subnet_cidrs)
+  subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private-route.id
 }
