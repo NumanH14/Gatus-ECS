@@ -13,25 +13,10 @@ provider "aws" {
 # provider block will be deleted. just here for testing tf plan purposes
 resource "aws_ecs_cluster" "gatus-cluster" {
   name = "gatus-ecs"
-
-  configuration {
-    execute_command_configuration {
-      logging    = "OVERRIDE"
-
-      log_configuration {
-        cloud_watch_log_group_name = aws_cloudwatch_log_group.cloudwatch_logging.id
-      }
-    }
-  }
   setting {
     name  = "containerInsights"
     value = "enhanced"
   }
-
-}
-
-resource "aws_cloudwatch_log_group" "cloudwatch_logging" {
-  name = "cloudwatch-logging"
 }
 
 resource "aws_ecs_service" "gatus-service" {
@@ -39,8 +24,21 @@ resource "aws_ecs_service" "gatus-service" {
   cluster         = aws_ecs_cluster.gatus-cluster.id
   task_definition = aws_ecs_task_definition.gatus-ecs.id
   desired_count   = 2
-  iam_role        = aws_iam_role.ecs_role.id
   launch_type     = "FARGATE"
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.alb-target-group.arn
+    container_name   = "gatus-image"
+    container_port   = 8080
+  }
+
+  network_configuration {
+    subnets = var.subnet.id
+    security_groups = var.security_group.id
+    assign_public_ip = false
+
+
+  }
 
 }
 resource "aws_ecs_task_definition" "gatus-ecs" {
@@ -49,6 +47,7 @@ resource "aws_ecs_task_definition" "gatus-ecs" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
+  execution_role_arn = aws_iam_role.ecs_role.arn
  container_definitions = jsonencode([
   {
     name      = "gatus-image"
@@ -72,6 +71,7 @@ resource "aws_ecs_task_definition" "gatus-ecs" {
     operating_system_family = "LINUX"
     cpu_architecture        = "ARM64"
   }
+
 }
 
 data "aws_iam_policy_document" "role_assume_policy" {
