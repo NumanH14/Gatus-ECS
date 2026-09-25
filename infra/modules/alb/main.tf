@@ -24,3 +24,17 @@ resource "aws_lb_listener" "alb_listener" {
     target_group_arn = aws_lb_target_group.alb-target-group.arn
   }
 }
+
+resource "aws_lb_target_group_attachment" "alb_target_group_attach" {
+  target_group_arn = aws_lb_target_group.alb-target-group.id
+  target_id        = aws_lb.alb_lb.arn
+  port             = 443
+}
+
+resource "aws_lb_target_group" "alb-target-group" {
+  name        = "alb-alb-tg"
+  target_type = "alb"
+  port        = 443
+  protocol    = "TCP"
+  vpc_id      = var.aws_vpc.main.id
+}
