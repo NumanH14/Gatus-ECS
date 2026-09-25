@@ -12,3 +12,15 @@ resource "aws_lb" "alb_lb" {
   }
 }
 
+resource "aws_lb_listener" "alb_listener" {
+  load_balancer_arn = aws_lb.alb_lb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-"
+  certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.alb-target-group.arn
+  }
+}
