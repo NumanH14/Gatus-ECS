@@ -2,7 +2,7 @@ resource "aws_lb" "alb_lb" {
   name               = "alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [var.aws_security_group.alb_sg.id]
+  security_groups    = [var.alb_sg.id]
   subnets            = var.public_subnet_cidrs.id
 
   enable_deletion_protection = false
@@ -34,7 +34,7 @@ resource "aws_lb_target_group_attachment" "alb_target_group_attach" {
 resource "aws_lb_target_group" "alb-target-group" {
   name        = "alb-alb-tg"
   target_type = "alb"
-  port        = 443
+  port        = 8080
   protocol    = "TCP"
-  vpc_id      = var.aws_vpc.main.id
+  vpc_id      = var.alb_vpc_id
 }
