@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-  }
-}
-provider "aws" {
-  region = "eu-west-2"
-}
-
-# provider block will be deleted. just here for testing tf plan purposes
 resource "aws_ecs_cluster" "gatus-cluster" {
   name = "gatus-ecs"
   setting {
@@ -33,8 +20,8 @@ resource "aws_ecs_service" "gatus-service" {
   }
 
   network_configuration {
-    subnets          = var.subnet_ids
-    security_groups  = var.security_group_ids
+    subnets          = var.private_subnet_cidrs
+    security_groups  = var.security_group_id
     assign_public_ip = false
 
 
