@@ -14,7 +14,7 @@ resource "aws_ecs_service" "gatus-service" {
   launch_type     = "FARGATE"
 
   load_balancer {
-    target_group_arn = var.alb-target-group.arn
+    target_group_arn = var.alb-target-group
     container_name   = "gatus-image"
     container_port   = 8080
   }
