@@ -21,7 +21,7 @@ resource "aws_ecs_service" "gatus-service" {
 
   network_configuration {
     subnets          = var.private_subnet_cidrs
-    security_groups  = var.security_group_id
+    security_groups  = [var.security_group_id]
     assign_public_ip = false
 
 

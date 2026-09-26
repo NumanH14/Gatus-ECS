@@ -4,7 +4,7 @@ variable "private_subnet_cidrs" {
 }
 
 variable "security_group_id" {
-  type = list(string)
+  type = string
 }
 
 variable "alb-target-group" {
