@@ -4,15 +4,15 @@ output "vpc_id" {
 output "vpc_cidr" {
   value = var.vpc_cidr_block 
 }
-output "subnet_id" {
+output "public_sub_id" {
   value = aws_subnet.public[*].id
 }
-output "igw_id" {
-  value = aws_internet_gateway.gw.id
+output "private_sub_id" {
+  value = aws_subnet.private[*].id
 }
-output "public_route_table_id" {
-  value = aws_route_table.public-route.id
+output "alb_sg" {
+  value = aws_security_group.allow_http-https.id 
 }
-output "private_route_table_id" {
-  value = aws_route_table.private-route.id
+output "sg_id" {
+  value = aws_security_group.allow_http-https.id
 }
