@@ -92,7 +92,7 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private-route.id
 }
 
-# Security groups & rules
+# Security groups & rules for lb 
 
 resource "aws_security_group" "allow_http-https" {
   name        = "allow_tls"
@@ -122,6 +122,32 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
 
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic" {
   security_group_id = aws_security_group.allow_http-https.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
+# security group for ECS
+
+resource "aws_security_group" "ecs_sg" {
+  name        = "security group for ecs"
+  description = "this will allow inbound traffic to gatus app"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = ""
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ecs_sg_ingress" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 8080
+  ip_protocol       = "tcp"
+  to_port           = 8080
+}
+
+resource "aws_vpc_security_group_egress_rule" "ecs_sg_outbound" {
+  security_group_id = aws_security_group.ecs_sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }
