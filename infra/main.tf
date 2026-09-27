@@ -17,7 +17,7 @@ module "ecs" {
   source               = "./modules/ecs"
   alb-target-group     = module.alb.alb-target-arn
   private_subnet_cidrs = module.vpc.private_sub_id
-  security_group_id    = module.vpc.sg_id
+  security_group_id    = module.vpc.ecs_sg
 }
 
 module "dns" {

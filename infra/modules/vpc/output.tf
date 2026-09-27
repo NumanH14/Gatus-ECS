@@ -13,6 +13,6 @@ output "private_sub_id" {
 output "alb_sg" {
   value = aws_security_group.allow_http-https.id 
 }
-output "sg_id" {
-  value = aws_security_group.allow_http-https.id
+output "ecs_sg" {
+  value = aws_security_group.ecs_sg.id 
 }
