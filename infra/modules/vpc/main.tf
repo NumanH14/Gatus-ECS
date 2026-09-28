@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-  }
-}
-provider "aws" {
-  region = "eu-west-2"
-}
-
-# provider block will be deleted. just here for testing tf plan purposes
-
 resource "aws_vpc" "main" {
   cidr_block       = var.vpc_cidr_block
   instance_tenancy = var.tenancy_default
@@ -73,7 +59,12 @@ resource "aws_route_table" "public-route" {
 #private route table
 
 resource "aws_route_table" "private-route" {
+  count = length(var.private_subnet_cidrs)
   vpc_id = aws_vpc.main.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+  }
   tags = {
     Name = "private-rt"
   }
@@ -89,7 +80,7 @@ resource "aws_route_table_association" "public" {
 resource "aws_route_table_association" "private" {
   count = length(var.private_subnet_cidrs)
   subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private-route.id
+  route_table_id = aws_route_table.private-route[count.index].id
 }
 
 # Security groups & rules for lb 
@@ -150,4 +141,19 @@ resource "aws_vpc_security_group_egress_rule" "ecs_sg_outbound" {
   security_group_id = aws_security_group.ecs_sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
+}
+
+resource "aws_nat_gateway" "nat_gw" {
+  count = length(var.availability_zones)
+  allocation_id = aws_eip.eip[count.index].allocation_id
+  subnet_id     = aws_subnet.public[count.index].id 
+
+  tags = {
+    Name = "gw NAT"
+  }
+  depends_on = [aws_internet_gateway.gw]
+}
+
+resource "aws_eip" "eip" {
+  count = length(var.availability_zones)
 }
