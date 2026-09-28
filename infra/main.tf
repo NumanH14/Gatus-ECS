@@ -7,6 +7,7 @@ module "alb" {
   alb_vpc_id          = module.vpc.vpc_id
   alb_sg              = module.vpc.alb_sg
   public_subnet_cidrs = module.vpc.public_sub_id
+  acm-arn             = module.acm.acm-arn
 }
 
 module "ecr" {
@@ -21,10 +22,15 @@ module "ecs" {
 }
 
 module "dns" {
-  source               = "./modules/dns"
-  cloudflare_api_token = var.api_token
+  source                = "./modules/dns"
+  cloudflare_api_token  = var.api_token
+  cloudflare_zone_id    = var.cloudflare_zone_id
+  cloudflare_account_id = var.cloudflare_account_id
+  alb_dns               = module.alb.alb_name
 }
 
 module "acm" {
-  source = "./modules/acm"
+  source             = "./modules/acm"
+  cloudflare_zone_id = var.cloudflare_zone_id
+  cloudflare_api_token = var.api_token 
 }
