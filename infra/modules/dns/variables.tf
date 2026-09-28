@@ -2,7 +2,19 @@ variable "cloudflare_api_token" {
     type = string
     sensitive = true 
 }
-variable "zone_id" {
+variable "cloudflare_zone_id" {
     type = string
-    default = "248a547dfaf3028232d5b9c698f66b65"
+}
+
+variable "cloudflare_account_id" {
+    type = string
+}
+
+variable "domain-name" {
+    type = string
+    default = "@"
+}
+
+variable "alb_dns" {
+    type = string
 }
