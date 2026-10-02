@@ -1,0 +1,21 @@
+name: build-push
+on:
+    workflow_dispatch:
+
+ permissions:
+ id-token: write # This is required for requesting the JWT
+ contents: read # This is required for actions/checkout
+
+ jobs:
+    runs-on: linux/amd64
+
+    steps:
+        -
+            name: checkout code
+            uses: actions/checkout@v4
+            
+            name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v4
+            with:
+                role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
+                aws-region: ${{ var.AWS_REGION }}
