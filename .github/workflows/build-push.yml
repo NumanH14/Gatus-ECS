@@ -6,10 +6,14 @@ permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
 
+env:
+    AWS_REGION: eu-west-2
+    LATEST_TAG: user/app:latest
+
 jobs:
   build-push:
     name: build and push docker image to aws ECR
-    runs-on: linux/amd64
+    runs-on: ubuntu-latest
     steps:
       -
         name: checkout code
@@ -18,4 +22,22 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
-          aws-region: ${{ vars.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR Private
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: build docker image locally
+        uses: docker/build-push-action@v7
+        with:
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ env.LATEST_TAG }}
+          push: true
+      - run: |
+         echo "building image"
+       
+        
