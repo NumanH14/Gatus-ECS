@@ -31,13 +31,31 @@ jobs:
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: build docker image locally
-        uses: docker/build-push-action@v7
+      - name: build docker image
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image locally
+        env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: gatus-ecs
+            tags: ${{ secrets.IMAGE_URI }}
+        run: |
+         docker buildx build -t $ECR_REPOSITORY:$IMAGE_URI \
+         --platform linux/amd64 \
+         --load \
+         .
+
+      - name: Grype container scanner   
+        uses: anchore/scan-action@v7
         with:
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ env.LATEST_TAG }}
-          push: true
-      - run: |
-         echo "building image"
-       
-        
+          image: $IMAGE_URI
+          fail-build: false
+
+
+      - name: Push Docker Image to ECR
+        run: |
+            echo "Pushing Docker image to ECR"
+            docker push
+            echo "Push successful"
+            
+      - name: Update ECS service 
