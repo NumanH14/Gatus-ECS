@@ -8,12 +8,11 @@ permissions:
 
 env:
     AWS_REGION: eu-west-2
-    LATEST_TAG: user/app:latest
 
 jobs:
   build-push:
     name: build and push docker image to aws ECR
-    runs-on: ubuntu-latest
+    runs-on: ubuntu
     steps:
       -
         name: checkout code
@@ -37,7 +36,7 @@ jobs:
             ECR_REPOSITORY: gatus-ecs
             tags: ${{ secrets.IMAGE_URI }}
         run: |
-         docker buildx build -t $ECR_REPOSITORY:$IMAGE_URI \
+         docker buildx build -t $ECR_REPOSITORY:${{ github.sha }} \
          --platform linux/amd64 \
          --load \
          .
