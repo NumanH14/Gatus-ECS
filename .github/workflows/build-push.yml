@@ -39,7 +39,7 @@ jobs:
          docker buildx build -t $ECR_REPOSITORY:${{ github.sha }} \
          --platform linux/amd64 \
          --load \
-         -f app/Dockerfile 
+         -f app/Dockerfile .
 
       - name: Grype container scanner   
         uses: anchore/scan-action@v7
