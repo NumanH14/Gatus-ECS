@@ -40,7 +40,7 @@ jobs:
          --platform linux/amd64 \
          --load \
          -f app/Dockerfile \
-         .
+         ./app
 
       - name: Grype container scanner   
         uses: anchore/scan-action@v7
