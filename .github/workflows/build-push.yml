@@ -52,7 +52,7 @@ jobs:
       - name: Push Docker Image to ECR
         run: |
             echo "Pushing Docker image to ECR"
-            docker push
+            docker push ${{ github.sha }}
             echo "Push successful"
 
 
