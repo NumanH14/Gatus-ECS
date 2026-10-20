@@ -45,7 +45,7 @@ jobs:
       - name: Grype container scanner   
         uses: anchore/scan-action@v7
         with:
-          image: gatus-ecs:${{ github.sha }}
+          image: ${{ steps.login-ecr.outputs.registry }}/gatus-ecs:${{ github.sha }}
           fail-build: false
 
 
