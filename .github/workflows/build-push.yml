@@ -52,7 +52,6 @@ jobs:
       - name: Push Docker Image to ECR
         run: |
             echo "Pushing Docker image to ECR"
-            docker tag 
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
             echo "Push successful"
 
