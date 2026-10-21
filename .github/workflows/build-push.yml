@@ -45,7 +45,7 @@ jobs:
       - name: Grype container scanner   
         uses: anchore/scan-action@v7
         with:
-          image: $ECR_REPO${{ github.sha }}
+          image: ${{secrets.ECR_REPO}}:${{ github.sha }}
           fail-build: false
 
 
@@ -53,7 +53,7 @@ jobs:
         run: |
             echo "Pushing Docker image to ECR"
             docker tag 
-            docker push $ECR_REPOSITORY:${{ github.sha }}
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
             echo "Push successful"
 
 
