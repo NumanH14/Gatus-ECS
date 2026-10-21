@@ -33,7 +33,7 @@ jobs:
       - name: Build Docker image locally
         env:
             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            ECR_REPOSITORY: gatus-ecs
+            ECR_REPOSITORY: ${{secrets.ECR_REPO}}
             tags: ${{ secrets.IMAGE_URI }}
         run: |
          docker buildx build -t $ECR_REPOSITORY:${{ github.sha }} \
@@ -45,13 +45,14 @@ jobs:
       - name: Grype container scanner   
         uses: anchore/scan-action@v7
         with:
-          image: ${{ steps.login-ecr.outputs.registry }}/gatus-ecs:${{ github.sha }}
+          image: $ECR_REPO${{ github.sha }}
           fail-build: false
 
 
       - name: Push Docker Image to ECR
         run: |
             echo "Pushing Docker image to ECR"
+            docker tag 
             docker push $ECR_REPOSITORY:${{ github.sha }}
             echo "Push successful"
 
