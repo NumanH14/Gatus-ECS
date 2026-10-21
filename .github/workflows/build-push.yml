@@ -68,8 +68,8 @@ jobs:
 
       - name: Update ECS service
         env:
-          ECS_CLUSTER: gatus-cluster
-          ECS_SERVICE: gatus-service
+          ECS_CLUSTER: gatus-ecs
+          ECS_SERVICE: gatus
         run: |
           aws ecs update-service \
             --cluster $ECS_CLUSTER \
