@@ -11,6 +11,9 @@ env:
 jobs:
   terraform-deploy:
      runs-on: ubuntu-latest
+     defaults:
+        run:
+          working-directory: ./infra
      
      steps:
        - name: checkout code
