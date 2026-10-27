@@ -8,14 +8,12 @@ permissions:
 
 env:
     AWS_REGION: eu-west-2
-
 jobs:
   build-push:
     name: build and push docker image to aws ECR
     runs-on: ubuntu-latest
     steps:
-      -
-        name: checkout code
+      - name: checkout code
         uses: actions/checkout@v4 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
