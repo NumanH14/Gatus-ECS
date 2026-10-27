@@ -36,7 +36,7 @@ jobs:
 
        - name: format terraform code
          run: |
-          terraform fmt
+          terraform fmt -recursive 
 
        - name: validate terraform code
          run: |
