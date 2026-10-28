@@ -38,20 +38,17 @@ jobs:
          run: |
           terraform fmt -recursive 
 
-       - name: validate terraform code
-         run: |
-          terraform validate
-
        - name: terraform plan
          env:
-          VAR_api_token: ${{ secrets.API_TOKEN }}
+           TF_VAR_api_token: ${{ secrets.API_TOKEN }}
          run: |
-          terraform plan
+           terraform plan -input=false
 
        - name: Checkov IAC scanning tool
          uses: bridgecrewio/checkov-action@v12
 
        - name: terraform apply
+         env:
+          TF_VAR_api_token: ${{ secrets.API_TOKEN }}
          run: |
-          terraform apply --auto-approve
-
+          terraform apply --auto-approve -input=false
