@@ -43,6 +43,8 @@ jobs:
           terraform validate
 
        - name: terraform plan
+         env:
+          VAR_api_token: ${{ secrets.API_TOKEN }}
          run: |
           terraform plan
 
