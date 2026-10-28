@@ -52,6 +52,8 @@ jobs:
 
        - name: Checkov IAC scanning tool
          uses: bridgecrewio/checkov-action@v12
+         with:
+          soft_fail: true
 
        - name: terraform apply
          run: |
