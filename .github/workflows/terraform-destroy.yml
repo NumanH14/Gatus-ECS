@@ -36,6 +36,8 @@ jobs:
          run: terraform init
          env:
           TF_VAR_api_token: ${{ secrets.API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ secrets.cloudflare_account_id }}
+          TF_VAR_cloudflare_zone_id: ${{ secrets.cloudflare_zone_id }}
 
        - name: Destroy infra
          run: terraform destroy --auto-approve
