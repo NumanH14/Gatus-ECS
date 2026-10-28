@@ -7,6 +7,9 @@ permissions:
  contents: read
 env:
     AWS_REGION: eu-west-2
+    TF_VAR_api_token: ${{ secrets.API_TOKEN }}
+    TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
 
 jobs:
   terraform-deploy:
@@ -40,8 +43,10 @@ jobs:
 
        - name: terraform plan
          env:
-           TF_VAR_api_token: ${{ secrets.API_TOKEN }}
-           TF_VARS: ${{secrets.TFVARS}}
+          TF_VAR_api_token: ${{secrets.API_TOKEN}}
+          TF_VAR_cloudflare_account_id: ${{ secrets.cloudflare_account_id }}
+          TF_VAR_cloudflare_zone_id: ${{ secrets.cloudflare_zone_id }}
+
          run: |
            terraform plan -input=false
 
@@ -49,7 +54,5 @@ jobs:
          uses: bridgecrewio/checkov-action@v12
 
        - name: terraform apply
-         env:
-          TF_VAR_api_token: ${{ secrets.API_TOKEN }}
          run: |
           terraform apply --auto-approve -input=false

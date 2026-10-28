@@ -4,6 +4,7 @@ on:
 
 env:
     AWS_REGION: eu-west-2
+    TF_VAR_api_token: ${{ secrets.API_TOKEN }}
 
 permissions:
  id-token: write
@@ -33,6 +34,8 @@ jobs:
 
        - name: initialise terraform modules
          run: terraform init
+         env:
+          TF_VAR_api_token: ${{ secrets.API_TOKEN }}
 
        - name: Destroy infra
          run: terraform destroy --auto-approve
