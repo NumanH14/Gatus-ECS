@@ -41,6 +41,7 @@ jobs:
        - name: terraform plan
          env:
            TF_VAR_api_token: ${{ secrets.API_TOKEN }}
+           TF_VARS: ${{secrets.TFVARS}}
          run: |
            terraform plan -input=false
 
