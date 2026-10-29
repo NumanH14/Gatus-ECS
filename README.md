@@ -113,7 +113,6 @@ Three **manually triggered** pipelines:
    - Pushes the image to ECR only if it passes the configured security checks
 
 2. **Terraform apply**
-   - Runs Checkov security scanning (**hard fail**)
    - Runs `fmt`, `validate` and `plan`
    - Performs Checkov security scanning (**soft fail**)
    - Provisions infrastructure using Terraform
